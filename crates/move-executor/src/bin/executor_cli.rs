@@ -33,7 +33,7 @@ fn main() -> Result<()> {
         )
         .arg(
             Arg::from_usage("-d --dialect=[DIALECT]")
-                .possible_values(&["libra", "dfinance"])
+                .possible_values(&["libra", "starcoin", "dfinance"])
                 .default_value("libra")
                 .help("Move language dialect"),
         )

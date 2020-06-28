@@ -6,7 +6,6 @@ use crate::shared::bech32::{bech32_into_libra, HRP};
 use crate::shared::errors::FileSourceMap;
 use crate::shared::ProvidedAccountAddress;
 use anyhow::Context;
-use libra_move_core_types::account_address::AccountAddress as LibraAccountAddress;
 use move_core_types::account_address::AccountAddress;
 use move_core_types::gas_schedule::CostTable;
 
@@ -19,7 +18,7 @@ impl Dialect for LibraDialect {
     }
 
     fn normalize_account_address(&self, addr: &str) -> Result<ProvidedAccountAddress> {
-        let address = LibraAccountAddress::from_hex_literal(&addr)?;
+        let address = AccountAddress::from_hex_literal(&addr)?;
         let normalized_address = format!("0x{}", address);
         let lowered = format!("0x00000000{}", address);
         Ok(ProvidedAccountAddress::new(

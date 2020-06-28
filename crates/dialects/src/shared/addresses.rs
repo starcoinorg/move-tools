@@ -1,9 +1,8 @@
+use crate::shared::errors::FileSourceMap;
 use lazy_static::lazy_static;
+use move_core_types::account_address::AccountAddress;
 use regex::Regex;
 
-use libra_move_core_types::account_address::AccountAddress as LibraAccountAddress;
-
-use crate::shared::errors::FileSourceMap;
 lazy_static! {
     static ref LIBRA_16_BYTES_REGEX: Regex = Regex::new(r"(0x[0-9a-f]{1,32})[^0-9a-f]").unwrap();
 }
@@ -15,7 +14,7 @@ pub fn replace_16_bytes_libra(source: &str, file_source_map: &mut FileSourceMap)
         let item = mat.get(1).unwrap();
 
         let orig_address = item.as_str();
-        let account_address = LibraAccountAddress::from_hex_literal(orig_address).unwrap();
+        let account_address = AccountAddress::from_hex_literal(orig_address).unwrap();
         let repl_address = format!("0x00000000{}", account_address);
 
         file_source_map.insert_address_layer(

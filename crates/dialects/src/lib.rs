@@ -16,6 +16,7 @@ pub mod shared;
 #[serde(rename_all = "lowercase")]
 pub enum DialectName {
     Libra,
+    Starcoin,
     DFinance,
 }
 
@@ -23,6 +24,7 @@ impl DialectName {
     pub fn get_dialect(&self) -> Box<dyn Dialect> {
         match self {
             DialectName::Libra => Box::new(LibraDialect::default()),
+            DialectName::Starcoin => Box::new(LibraDialect::default()),
             DialectName::DFinance => Box::new(DFinanceDialect::default()),
         }
     }
@@ -34,6 +36,7 @@ impl FromStr for DialectName {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "libra" => Ok(DialectName::Libra),
+            "starcoin" => Ok(DialectName::Starcoin),
             "dfinance" => Ok(DialectName::DFinance),
             _ => Err(anyhow::format_err!("Invalid dialect {:?}", s)),
         }
