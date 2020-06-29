@@ -20,11 +20,10 @@ impl Dialect for LibraDialect {
     fn normalize_account_address(&self, addr: &str) -> Result<ProvidedAccountAddress> {
         let address = AccountAddress::from_hex_literal(&addr)?;
         let normalized_address = format!("0x{}", address);
-        let lowered = format!("0x00000000{}", address);
         Ok(ProvidedAccountAddress::new(
             addr.to_string(),
+            normalized_address.clone(),
             normalized_address,
-            lowered,
         ))
     }
 
@@ -32,8 +31,9 @@ impl Dialect for LibraDialect {
         libra_cost_table()
     }
 
-    fn replace_addresses(&self, source_text: &str, source_map: &mut FileSourceMap) -> String {
-        crate::shared::addresses::replace_16_bytes_libra(source_text, source_map)
+    fn replace_addresses(&self, source_text: &str, _source_map: &mut FileSourceMap) -> String {
+        // crate::shared::addresses::replace_16_bytes_libra(source_text, source_map)
+        source_text.to_string()
     }
 }
 
