@@ -140,7 +140,7 @@ fn test_server_config_change() {
             settings: serde_json::json!(""),
         });
     // receives workspace/configuration request from server, responds with json settings
-    let updated_settings_response = response(1, serde_json::json!([{"dialect": "dfinance"}]));
+    let updated_settings_response = response(1, serde_json::json!([{"dialect": "starcoin"}]));
     send_messages(
         &client_conn,
         vec![didchange_notification, updated_settings_response],
@@ -160,5 +160,5 @@ fn test_server_config_change() {
             .method,
         "workspace/configuration"
     );
-    assert_eq!(global_state.config.dialect_name, DialectName::DFinance);
+    assert_eq!(global_state.config.dialect_name, DialectName::Starcoin);
 }

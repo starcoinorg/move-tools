@@ -1292,7 +1292,6 @@ dependencies = [
  "log 0.4.8",
  "lsp-server",
  "lsp-types",
- "move-executor",
  "move-language-server",
  "ra_vfs",
  "serde_json",
@@ -1943,20 +1942,6 @@ dependencies = [
  "ref-cast",
  "serde",
  "thiserror",
-]
-
-[[package]]
-name = "move-executor"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "dialects",
- "move-lang",
- "serde",
- "serde_json",
- "structopt",
- "utils",
 ]
 
 [[package]]

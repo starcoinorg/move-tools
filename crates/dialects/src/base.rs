@@ -1,31 +1,22 @@
-use anyhow::Context;
 use anyhow::Result;
 use move_core_types::gas_schedule::CostTable;
-use move_core_types::parser::parse_transaction_argument;
 use move_lang::parser::ast::Definition;
 use move_lang::parser::syntax;
 use move_lang::strip_comments_and_verify;
+use utils::MoveFile;
 use vm::file_format::CompiledScript;
 use vm::CompiledModule;
 
-use utils::{FilesSourceText, MoveFile};
-
-use crate::lang;
-use crate::lang::executor::{
-    convert_txn_arg, execute_script, generate_bytecode, prepare_fake_network_state,
-    serialize_script,
-};
+use crate::lang::executor::generate_bytecode;
 use crate::lang::{check_defs, into_exec_compiler_error, replace_sender_placeholder};
 use crate::shared::errors::{CompilerError, ExecCompilerError, FileSourceMap, ProjectSourceMap};
-use crate::shared::results::{ChainStateChanges, ResourceChange};
+
 use crate::shared::ProvidedAccountAddress;
 
 pub trait Dialect {
     fn name(&self) -> &str;
 
     fn normalize_account_address(&self, addr: &str) -> Result<ProvidedAccountAddress>;
-
-    fn cost_table(&self) -> CostTable;
 
     fn replace_addresses(&self, source_text: &str, source_map: &mut FileSourceMap) -> String;
 
@@ -134,48 +125,5 @@ pub trait Dialect {
             .map_err(|errors| into_exec_compiler_error(errors, project_offsets_map.clone()))?;
         generate_bytecode(program)
             .map_err(|errors| into_exec_compiler_error(errors, project_offsets_map))
-    }
-
-    fn compile_and_run(
-        &self,
-        script: MoveFile,
-        deps: &[MoveFile],
-        sender: ProvidedAccountAddress,
-        genesis_changes: Vec<ResourceChange>,
-        args: Vec<String>,
-    ) -> Result<ChainStateChanges> {
-        let genesis_write_set = lang::resources::changes_into_writeset(genesis_changes)
-            .with_context(|| "Provided genesis serialization error")?;
-
-        let (compiled_script, compiled_modules) =
-            self.check_and_generate_bytecode(script, deps, sender.clone())?;
-
-        let network_state = prepare_fake_network_state(compiled_modules, genesis_write_set);
-
-        let serialized_script =
-            serialize_script(compiled_script).context("Script serialization error")?;
-
-        let mut script_args = Vec::with_capacity(args.len());
-        for passed_arg in args {
-            let transaction_argument = parse_transaction_argument(&passed_arg)?;
-            let script_arg = convert_txn_arg(transaction_argument);
-            script_args.push(script_arg);
-        }
-
-        execute_script(
-            sender.as_account_address(),
-            &network_state,
-            serialized_script,
-            script_args,
-            self.cost_table(),
-        )
-    }
-
-    fn print_compiler_errors_and_exit(
-        &self,
-        files: FilesSourceText,
-        errors: Vec<CompilerError>,
-    ) -> ! {
-        lang::report_errors(files, errors)
     }
 }
