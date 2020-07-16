@@ -1925,6 +1925,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "258c143ddb5105becc4834f66d0b0ad3d3205d07cb3efc3236f33f623dd07b16"
 
 [[package]]
+name = "move-build"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "move-lang",
+ "structopt",
+]
+
+[[package]]
 name = "move-core-types"
 version = "0.1.0"
 source = "git+https://github.com/starcoinorg/libra.git?branch=feature/moveide#54679e6bb8658178d60da272dde11637e24cd76c"

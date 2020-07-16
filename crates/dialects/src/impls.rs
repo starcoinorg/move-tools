@@ -1,13 +1,8 @@
-use anyhow::Result;
-
 use crate::base::Dialect;
-use crate::lang::gas::libra_cost_table;
-
 use crate::shared::errors::FileSourceMap;
 use crate::shared::ProvidedAccountAddress;
-
+use anyhow::Result;
 use move_core_types::account_address::AccountAddress;
-use move_core_types::gas_schedule::CostTable;
 
 #[derive(Default)]
 pub struct LibraDialect;

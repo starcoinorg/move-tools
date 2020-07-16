@@ -4,7 +4,6 @@ use move_lang::shared::Address;
 pub mod addresses;
 pub mod bech32;
 pub mod errors;
-pub mod results;
 
 #[derive(Debug, Clone)]
 pub struct ProvidedAccountAddress {

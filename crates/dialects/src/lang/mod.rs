@@ -15,10 +15,6 @@ use crate::shared::errors::{
     ProjectSourceMap,
 };
 
-pub mod executor;
-pub mod gas;
-pub mod resources;
-
 fn from_compiler_error(comp_error: CompilerError) -> Error {
     comp_error
         .parts

@@ -1,17 +1,12 @@
+use crate::lang::into_exec_compiler_error;
+use crate::lang::{check_defs, replace_sender_placeholder};
+use crate::shared::errors::{CompilerError, ExecCompilerError, FileSourceMap, ProjectSourceMap};
+use crate::shared::ProvidedAccountAddress;
 use anyhow::Result;
-use move_core_types::gas_schedule::CostTable;
 use move_lang::parser::ast::Definition;
 use move_lang::parser::syntax;
 use move_lang::strip_comments_and_verify;
 use utils::MoveFile;
-use vm::file_format::CompiledScript;
-use vm::CompiledModule;
-
-use crate::lang::executor::generate_bytecode;
-use crate::lang::{check_defs, into_exec_compiler_error, replace_sender_placeholder};
-use crate::shared::errors::{CompilerError, ExecCompilerError, FileSourceMap, ProjectSourceMap};
-
-use crate::shared::ProvidedAccountAddress;
 
 pub trait Dialect {
     fn name(&self) -> &str;
@@ -109,21 +104,5 @@ pub trait Dialect {
                 Err(into_exec_compiler_error(errors, offsets_map).transform_with_source_map())
             }
         }
-    }
-
-    fn check_and_generate_bytecode(
-        &self,
-        file: MoveFile,
-        deps: &[MoveFile],
-        sender: ProvidedAccountAddress,
-    ) -> Result<(CompiledScript, Vec<CompiledModule>), ExecCompilerError> {
-        let (mut script_defs, modules_defs, project_offsets_map) =
-            self.parse_files(file, deps, &sender)?;
-        script_defs.extend(modules_defs);
-
-        let program = check_defs(script_defs, vec![], sender.as_address())
-            .map_err(|errors| into_exec_compiler_error(errors, project_offsets_map.clone()))?;
-        generate_bytecode(program)
-            .map_err(|errors| into_exec_compiler_error(errors, project_offsets_map))
     }
 }
