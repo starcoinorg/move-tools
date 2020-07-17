@@ -223,7 +223,7 @@ script {
     fun main(s: &signer) {
         let signer_address = Signer::address_of(s);
         let record = Record::get_record(signer_address);
-        Record::save(record);
+        Record::save(s, record);
     }
 }
     ";
@@ -250,7 +250,7 @@ script {
             config,
             record_module_fpath,
         );
-        assert!(errors.is_empty());
+        assert!(errors.is_empty(), "{:#?}", errors);
     }
 
     #[test]
@@ -264,7 +264,7 @@ script {
     fun main(s: &signer) {
         let signer_address = Signer::address_of(s);
         let record = Record::get_record(signer_address);
-        Record::save(record);
+        Record::save(s, record);
     }
 }
     ";
@@ -339,7 +339,7 @@ script {
     #[test]
     fn test_check_one_of_the_stdlib_modules_no_duplicate_definition() {
         let source_text = r"
-address 0x0 {
+address 0x1 {
     module Debug {
         native public fun print<T>(x: &T);
 
@@ -361,14 +361,14 @@ address 0x0 {
     #[test]
     fn invalid_valid_in_precense_of_bech32_address() {
         let invalid_source_text = r"
-address wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh {
+address 0x12345 {
     module Debug {
         pubic fun main() {}
     }
 }
     ";
         let errors =
-            diagnostics_with_config(invalid_source_text, config!({"dialect": "dfinance"}));
+            diagnostics_with_config(invalid_source_text, config!({"dialect": "starcoin"}));
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].message, "Unexpected \'pubic\'");
         assert_eq!(errors[0].range, range((3, 8), (3, 13)))
@@ -377,45 +377,45 @@ address wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh {
     #[test]
     fn two_bech32_addresses_one_in_the_middle_of_script() {
         let source_text = r"
-address wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh {
+address 0x12345 {
     module Debug {
         public fun main() {
-            let _ = wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh;
+            let _ = 0x12345;
         }
     }
 }
     ";
-        let errors = diagnostics_with_config(source_text, config!({"dialect": "dfinance"}));
+        let errors = diagnostics_with_config(source_text, config!({"dialect": "starcoin"}));
         assert!(errors.is_empty(), "{:?}", errors);
 
         let invalid_source_text = r"
-address wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh {
+address 0x12345 {
     module Debug {
         public fun main() {
-            let addr = wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh;
+            let addr = 0x12345;
         }
     }
 }
     ";
         let errors =
-            diagnostics_with_config(invalid_source_text, config!({"dialect": "dfinance"}));
+            diagnostics_with_config(invalid_source_text, config!({"dialect": "starcoin"}));
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].message, "Unused assignment or binding for local 'addr'. Consider removing or replacing it with '_'");
         assert_eq!(errors[0].range, range((4, 16), (4, 20)));
 
         let invalid_source_text = r"
-address wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh {
+address 0x12345 {
     module Debug {
         public fun main() {
-            let _ = wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh;
-            let _ = wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh;
+            let _ = 0x12345;
+            let _ = 0x12345;
             let _: u10;
         }
     }
 }
     ";
         let errors =
-            diagnostics_with_config(invalid_source_text, config!({"dialect": "dfinance"}));
+            diagnostics_with_config(invalid_source_text, config!({"dialect": "starcoin"}));
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].message, "Unbound type 'u10' in current scope");
         assert_eq!(errors[0].range, range((6, 19), (6, 22)));
@@ -424,15 +424,15 @@ address wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh {
     #[test]
     fn pass_bech32_address_as_sender() {
         let source_text = r"
-address wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh {
+address 0x12345 {
     module Debug {
         public fun main() {}
     }
 }
     ";
         let config = config!({
-            "dialect": "dfinance",
-            "sender_address": "wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh"
+            "dialect": "starcoin",
+            "sender_address": "0x12345"
         });
         let errors = diagnostics_with_config(source_text, config);
         assert!(errors.is_empty(), "{:?}", errors);
@@ -519,7 +519,7 @@ address {{sender}} {
 address {{ sender }} {
     module Debug {
         public fun main() {
-            let _ = wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh;
+            let _ = 0x12345;
             let _ = {{ sender }};
             // errors out
             0x0::Unknown::unknown();
@@ -527,8 +527,8 @@ address {{ sender }} {
     }
 }";
         let config = config!({
-            "dialect": "dfinance",
-            "sender_address": "wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh"
+            "dialect": "starcoin",
+            "sender_address": "0x12345"
         });
         let errors = diagnostics_with_config(source_text, config);
         assert_eq!(errors.len(), 1);
@@ -589,17 +589,14 @@ script {
         let text = r"
 script {
     fun main() {
-        let _ = wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh::Unknown::unknown();
+        let _ = 0x12345::Unknown::unknown();
     }
 }
         ";
-        let config = config!({"dialect": "dfinance"});
+        let config = config!({"dialect": "starcoin"});
         let errors = diagnostics_with_config(text, config);
         assert_eq!(errors.len(), 1);
-        assert_eq!(
-            errors[0].message,
-            "Unbound module \'wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh::Unknown\'"
-        )
+        assert_eq!(errors[0].message, "Unbound module \'0x12345::Unknown\'")
     }
 
     #[test]
@@ -612,20 +609,17 @@ script {
 }
         ";
         let config = config!({
-            "dialect": "dfinance",
-            "sender_address": "wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh"
+            "dialect": "starcoin",
+            "sender_address": "0x12345"
         });
         let errors = diagnostics_with_config(text, config);
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].range, range((3, 16), (3, 44)));
-        assert_eq!(
-            errors[0].message,
-            "Unbound module \'wallet1me0cdn52672y7feddy7tgcj6j4dkzq2su745vh::Unknown\'"
-        )
+        assert_eq!(errors[0].message, "Unbound module \'0x12345::Unknown\'")
     }
 
     #[test]
-    fn test_dfinance_documentation_issue_should_not_crash_with_span_overflow() {
+    fn test_starcoin_documentation_issue_should_not_crash_with_span_overflow() {
         let dfi_module_text = r"
 address 0x0 {
 /// docs

@@ -12,7 +12,7 @@ For the corresponding VSCode extension, see https://marketplace.visualstudio.com
 
 ## Configuration
 
-`dialect` - dialect of the Move language. Either `move` (for original Libra version) or `dfinance` (bech32 addresses and some other stuff). Default is `move`.
+`dialect` - dialect of the Move language. Either `move` (for original Libra version) or `starcoin`. Default is `move`.
 
 `sender_address` - address of the user, used for module imports. Default is `0x0`.
 
