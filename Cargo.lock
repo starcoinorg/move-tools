@@ -84,7 +84,6 @@ name = "analysis"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "codespan 0.8.0",
  "codespan 0.9.5",
  "codespan-reporting 0.8.0",
  "codespan-reporting 0.9.5",
@@ -653,7 +652,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "bech32",
- "codespan 0.8.0",
+ "codespan 0.9.5",
  "hex",
  "language-e2e-tests",
  "lazy_static",
@@ -2001,7 +2000,6 @@ dependencies = [
  "anyhow",
  "build-info",
  "build-info-build",
- "codespan 0.8.0",
  "codespan 0.9.5",
  "codespan-reporting 0.8.0",
  "codespan-reporting 0.9.5",
