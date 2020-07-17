@@ -108,20 +108,20 @@ impl Config {
                 })
                 .collect(),
         };
-        self.sender_address = match get(value, "/sender_address") {
-            None => {
-                log::info!("Using default account address 0x0");
-                ProvidedAccountAddress::default()
-            }
-            Some(address) => match self.dialect().normalize_account_address(address) {
-                Ok(provided_address) => provided_address,
-                Err(error) => {
-                    log::error!("Invalid sender_address string: {:?}", error);
-                    log::info!("Using default account address 0x0");
-                    ProvidedAccountAddress::default()
-                }
-            },
-        };
+        self.sender_address = get(value, "/sender_address")
+            .and_then(
+                |address| match self.dialect().normalize_account_address(address) {
+                    Ok(provided_address) => Some(provided_address),
+                    Err(error) => {
+                        log::error!("Invalid sender_address string: {:?}", error);
+                        None
+                    }
+                },
+            )
+            .unwrap_or_else(|| {
+                log::info!("Using default account address 0x1");
+                self.dialect().normalize_account_address("0x1").unwrap()
+            });
 
         log::info!("Config updated to = {:#?}", self);
         self.log_available_module_files();

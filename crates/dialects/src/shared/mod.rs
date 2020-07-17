@@ -39,8 +39,8 @@ impl Default for ProvidedAccountAddress {
     fn default() -> Self {
         ProvidedAccountAddress {
             original: "0x0".to_string(),
-            normalized_original: "0x00000000000000000000000000000000".to_string(),
-            lowered: "0x0000000000000000000000000000000000000000".to_string(),
+            normalized_original: "0x0000000000000000000000000000".to_string(),
+            lowered: "0x000000000000000000000000000000000000".to_string(),
         }
     }
 }
