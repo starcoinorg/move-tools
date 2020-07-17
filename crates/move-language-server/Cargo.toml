@@ -10,7 +10,7 @@ build = "build.rs"
 build-info-build = "=0.0.18"
 
 [dependencies]
-build-info = "=0.0.18"
+build-info = "=0.0.19"
 
 log = "0.4.8"
 env_logger = "0.7.1"

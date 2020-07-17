@@ -170,6 +170,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cdcf67bb7ba7797a081cd19009948ab533af7c355d5caf1d08c777582d351e9c"
 
 [[package]]
+name = "bincode"
+version = "1.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f30d3a39baa26f9651f17b375061f3233dde33424a8b72b0dbe93a68a0bc896d"
+dependencies = [
+ "byteorder",
+ "serde",
+]
+
+[[package]]
 name = "bit-set"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -240,11 +250,11 @@ dependencies = [
 
 [[package]]
 name = "build-info"
-version = "0.0.18"
+version = "0.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cf2be8ea9df6e587b7ac63cebac08f0ecd402fd6309d7ec60fc3b42809aada9e"
+checksum = "dc3d9a53f85ac2a4f25100900b47eee0f1f76d4d073983ae2000cdad5b451a00"
 dependencies = [
- "build-info-common",
+ "build-info-common 0.0.19",
  "build-info-proc",
  "lazy_static",
  "proc-macro-hack",
@@ -257,7 +267,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b67bf422eeaf62a544ecd6ec4cdcef96f2748d9eb6d0119993e55fdd3420b5eb"
 dependencies = [
  "anyhow",
- "build-info-common",
+ "build-info-common 0.0.18",
  "git2",
  "glob",
  "lazy_static",
@@ -279,13 +289,27 @@ dependencies = [
 ]
 
 [[package]]
-name = "build-info-proc"
-version = "0.0.18"
+name = "build-info-common"
+version = "0.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "afe73290055fbdcf55d3c748b499b9878408fbed3529aca7d494775b32ece1e5"
+checksum = "61e67fe3afd71e90b371645a470a104f77a315e1501e9c95dabaafa91af6b280"
+dependencies = [
+ "chrono",
+ "derive_more",
+ "semver 0.10.0",
+ "serde",
+]
+
+[[package]]
+name = "build-info-proc"
+version = "0.0.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aea4e0972daab76cc7c93106eafe0f564b24facb50c1f9cf2a907133ab9e0c50"
 dependencies = [
  "anyhow",
- "build-info-common",
+ "base64 0.12.3",
+ "bincode",
+ "build-info-common 0.0.19",
  "chrono",
  "format-buf",
  "num-bigint 0.2.6",
@@ -297,6 +321,7 @@ dependencies = [
  "quote 1.0.7",
  "serde_json",
  "syn 1.0.34",
+ "xz2",
 ]
 
 [[package]]
@@ -1788,6 +1813,17 @@ dependencies = [
  "serde_json",
  "serde_repr",
  "url",
+]
+
+[[package]]
+name = "lzma-sys"
+version = "0.1.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f24f76ec44a8ac23a31915d6e326bca17ce88da03096f1ff194925dc714dac99"
+dependencies = [
+ "cc",
+ "libc",
+ "pkg-config",
 ]
 
 [[package]]
@@ -3950,6 +3986,15 @@ dependencies = [
  "curve25519-dalek",
  "rand_core",
  "zeroize",
+]
+
+[[package]]
+name = "xz2"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c179869f34fc7c01830d3ce7ea2086bc3a07e0d35289b667d0a8bf910258926c"
+dependencies = [
+ "lzma-sys",
 ]
 
 [[package]]
