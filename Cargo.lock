@@ -170,6 +170,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cdcf67bb7ba7797a081cd19009948ab533af7c355d5caf1d08c777582d351e9c"
 
 [[package]]
+name = "bincode"
+version = "1.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f30d3a39baa26f9651f17b375061f3233dde33424a8b72b0dbe93a68a0bc896d"
+dependencies = [
+ "byteorder",
+ "serde",
+]
+
+[[package]]
 name = "bit-set"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -244,7 +254,7 @@ version = "0.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf2be8ea9df6e587b7ac63cebac08f0ecd402fd6309d7ec60fc3b42809aada9e"
 dependencies = [
- "build-info-common",
+ "build-info-common 0.0.18",
  "build-info-proc",
  "lazy_static",
  "proc-macro-hack",
@@ -252,18 +262,22 @@ dependencies = [
 
 [[package]]
 name = "build-info-build"
-version = "0.0.18"
+version = "0.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b67bf422eeaf62a544ecd6ec4cdcef96f2748d9eb6d0119993e55fdd3420b5eb"
+checksum = "0c5dafd462d6ff76bad50fc524c2222d6425cf050fe79ced676071e7e0b97a0f"
 dependencies = [
  "anyhow",
- "build-info-common",
+ "base64 0.12.3",
+ "bincode",
+ "build-info-common 0.0.19",
+ "cargo_metadata",
  "git2",
  "glob",
  "lazy_static",
+ "pretty_assertions",
  "rustc_version",
  "serde_json",
- "toml",
+ "xz2",
 ]
 
 [[package]]
@@ -279,13 +293,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "build-info-common"
+version = "0.0.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61e67fe3afd71e90b371645a470a104f77a315e1501e9c95dabaafa91af6b280"
+dependencies = [
+ "chrono",
+ "derive_more",
+ "semver 0.10.0",
+ "serde",
+]
+
+[[package]]
 name = "build-info-proc"
 version = "0.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "afe73290055fbdcf55d3c748b499b9878408fbed3529aca7d494775b32ece1e5"
 dependencies = [
  "anyhow",
- "build-info-common",
+ "build-info-common 0.0.18",
  "chrono",
  "format-buf",
  "num-bigint 0.2.6",
@@ -363,6 +389,18 @@ name = "c_linked_list"
 version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4964518bd3b4a8190e832886cdc0da9794f12e8e6c1613a9e90ff331c4c8724b"
+
+[[package]]
+name = "cargo_metadata"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b8de60b887edf6d74370fc8eb177040da4847d971d6234c7b13a6da324ef0caf"
+dependencies = [
+ "semver 0.9.0",
+ "serde",
+ "serde_derive",
+ "serde_json",
+]
 
 [[package]]
 name = "cc"
@@ -609,6 +647,16 @@ checksum = "b584a330336237c1eecd3e94266efb216c56ed91225d634cb2991c5f3fd1aeab"
 dependencies = [
  "generic-array 0.14.3",
  "subtle",
+]
+
+[[package]]
+name = "ctor"
+version = "0.1.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "39858aa5bac06462d4dd4b9164848eb81ffc4aa5c479746393598fd193afa227"
+dependencies = [
+ "quote 1.0.7",
+ "syn 1.0.34",
 ]
 
 [[package]]
@@ -1791,6 +1839,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "lzma-sys"
+version = "0.1.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f24f76ec44a8ac23a31915d6e326bca17ce88da03096f1ff194925dc714dac99"
+dependencies = [
+ "cc",
+ "libc",
+ "pkg-config",
+]
+
+[[package]]
 name = "maplit"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2268,6 +2327,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
+name = "output_vt100"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "53cdc5b785b7a58c5aad8216b3dfa114df64b0b06ae6e1501cef91df2fbdf8f9"
+dependencies = [
+ "winapi 0.3.9",
+]
+
+[[package]]
 name = "parking_lot"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2412,6 +2480,18 @@ checksum = "ad9940b913ee56ddd94aec2d3cd179dd47068236f42a1a6415ccf9d880ce2a61"
 dependencies = [
  "arrayvec",
  "typed-arena",
+]
+
+[[package]]
+name = "pretty_assertions"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f81e1644e1b54f5a68959a29aa86cde704219254669da328ecfdf6a1f09d427"
+dependencies = [
+ "ansi_term",
+ "ctor",
+ "difference",
+ "output_vt100",
 ]
 
 [[package]]
@@ -2841,6 +2921,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d7eb9ef2c18661902cc47e535f9bc51b78acd254da71d375c2f6720d9a40403"
 dependencies = [
  "semver-parser",
+ "serde",
 ]
 
 [[package]]
@@ -3950,6 +4031,15 @@ dependencies = [
  "curve25519-dalek",
  "rand_core",
  "zeroize",
+]
+
+[[package]]
+name = "xz2"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c179869f34fc7c01830d3ce7ea2086bc3a07e0d35289b667d0a8bf910258926c"
+dependencies = [
+ "lzma-sys",
 ]
 
 [[package]]
