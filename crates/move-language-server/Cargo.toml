@@ -16,7 +16,7 @@ log = "0.4.8"
 env_logger = "0.7.1"
 
 anyhow = "1.0.31"
-lsp-types = "0.77.0"
+lsp-types = "0.79.0"
 lsp-server = "0.3.2"
 
 serde = { version = "1.0.104", features = ["derive"] }
