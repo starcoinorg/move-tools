@@ -1778,11 +1778,10 @@ dependencies = [
 
 [[package]]
 name = "lsp-types"
-version = "0.77.0"
+version = "0.88.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "897c6c8930fbf12b67deffc83729287bb379dd5e5a4bd0ae2d81eff8d6503db6"
+checksum = "d8e8e042772e4e10b3785822f63c82399d0dd233825de44d2596f7fa86e023e0"
 dependencies = [
- "base64 0.12.3",
  "bitflags",
  "serde",
  "serde_json",
