@@ -8,5 +8,5 @@ edition = "2018"
 
 [dependencies]
 move-lang = { git = "https://github.com/starcoinorg/libra.git", branch = "feature/moveide" }
-structopt = "0.3.14"
+structopt = "0.3.22"
 anyhow = "1.0"
